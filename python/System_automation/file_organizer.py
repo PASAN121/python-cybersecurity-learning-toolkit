@@ -55,13 +55,26 @@ def get_category(extension):
 
     return "others"
 
+def log_action(message):
+    log_folder = Path("logs")
+    log_folder.mkdir(exist_ok=True)
+
+    log_file = log_folder / "organizer_log.txt"
+
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    with open(log_file, "a", encoding="utf-8") as f:
+        f.write(f"[{timestamp}] {message}\n")
+
+
 def create_category_folder(validated_folder, category):
     '''this function creates a category folder if it doesn't exist and returns the path to the category folder'''
     category_folder=validated_folder/category
+    log_action(f"Creating folder: {category_folder}")
 
 
     category_folder.mkdir(exist_ok=True) #exist_ok=True prevents error if folder already exists/run times error handle 
-    print(f"Created folder: {category_folder}")
+    #print(f"Created folder: {category_folder}")
     return category_folder
 
 
@@ -70,9 +83,11 @@ def move_file_to_category(file, category_folder):
 
     try:
         shutil.move(str(file), str(destination))
+        log_action(f"Moved '{file.name}' to '{category_folder}'")
         #print(f"Moved '{file.name}' to '{category_folder}'")
     except Exception as e:
         print(f"Error moving file '{file.name}': {e}")
+        log_action(f"ERROR moving {file.name}: {e}")
 
 
 
