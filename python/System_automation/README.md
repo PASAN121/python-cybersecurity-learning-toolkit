@@ -17,21 +17,6 @@ Built as a portfolio project to demonstrate practical Python automation: argumen
 
 ---
 
-## 🎬 Demo
-
-> An interactive walkthrough — folder scan → categorization → organized output.
-
-<div align="center">
-  <a href="assets/demo.html" target="_blank">
-    <img src="https://img.shields.io/badge/▶%20Open%20Live%20Demo-0d1117?style=for-the-badge&logo=python&logoColor=4ade80" alt="Open Live Demo"/>
-  </a>
-</div>
-
-> 💡 Open `assets/demo.html` in your browser to see the full animated demo.
-> Replace with `assets/demo.gif` once you record a real screen capture.
-
----
-
 ## 📁 Before vs After
 
 **Before** — a cluttered Downloads folder:
@@ -71,8 +56,7 @@ Downloads/
 ```bash
 # Clone the repo
 git clone https://github.com/PASAN121/python-cybersecurity-learning-toolkit
-cd python
-cd System_automation
+cd python-cybersecurity-learning-toolkit/python/System_automation
 
 # Run the organizer
 python file_organizer.py --folder "C:\Users\pasan\Downloads"
@@ -126,27 +110,27 @@ file_organizer.py
 
 ## 🗂️ File Type Mapping
 
-| Category     | Extensions                              |
-|--------------|-----------------------------------------|
-| `images`     | jpg, jpeg, png, gif, bmp, tiff          |
-| `documents`  | pdf, docx, txt, xlsx, pptx              |
-| `videos`     | mp4, avi, mkv, mov                      |
-| `audio`      | mp3, wav, aac                           |
-| `archives`   | zip, rar, tar, gz                       |
-| `others`     | anything not matched above              |
+| Category    | Extensions                     |
+| ----------- | ------------------------------ |
+| `images`    | jpg, jpeg, png, gif, bmp, tiff |
+| `documents` | pdf, docx, txt, xlsx, pptx     |
+| `videos`    | mp4, avi, mkv, mov             |
+| `audio`     | mp3, wav, aac                  |
+| `archives`  | zip, rar, tar, gz              |
+| `others`    | anything not matched above     |
 
----
+## 💡 What I Learned
+
+- `pathlib` for cross-platform file handling
+- `argparse` for building CLI tools
+- `shutil.move()` for safe file relocation
+- Structured logging with timestamps
 
 ## 🔮 Future Improvements
 
-- [ ] `--dry-run` flag to preview actions without moving files
-- [ ] `--undo` mode to restore files using the log as a manifest
-- [ ] Recursive mode to organize nested folders
-- [ ] Duplicate file detection before moving
-- [ ] Config file (`.yaml`) for custom extension-to-category mappings
-- [ ] GUI wrapper using `tkinter` or a web frontend
-
----
+- [ ] `--dry-run` flag to preview without moving
+- [ ] `--undo` mode using the log as a manifest
+- [ ] Config file for custom extension mappings
 
 ## 📄 License
 
