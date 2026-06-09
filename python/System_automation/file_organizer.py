@@ -46,6 +46,7 @@ def get_category(extension):
         "videos": ["mp4", "avi", "mkv", "mov"],
         "audio": ["mp3", "wav", "aac"],
         "archives": ["zip", "rar", "tar", "gz"]
+        
     }
 
     for category, extensions in categories.items():
