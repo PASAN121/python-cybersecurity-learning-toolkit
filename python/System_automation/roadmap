@@ -1,0 +1,34 @@
+Start
+ │
+ ▼
+Read CLI Argument
+ │
+ ▼
+Validate Folder
+ │
+ ▼
+Create/Open Log File
+ │
+ ▼
+Scan Directory
+ │
+ ▼
+For Each File
+ │
+ ├─ Is Directory?
+ │      │
+ │      └─ Skip
+ │
+ ├─ Get Extension
+ │
+ ├─ Create Destination Folder
+ │
+ ├─ Move File
+ │
+ └─ Write Log Entry
+ │
+ ▼
+Generate Summary
+ │
+ ▼
+End
