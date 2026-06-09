@@ -26,32 +26,28 @@ def scan_folder(validated_folder):
     return files
 
 def get_file_extension(file):
-   suffix=[]
-   for paths in file:
-        suffix.append(paths.suffix.lower())  #get the file extension and convert to lower case for consistency
- 
-   folder_suffix=[]       
 
-   for ext in suffix:
-        if ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp']:
-            if 'Images' not in folder_suffix:
-                folder_suffix.append('Images')
-        elif ext in ['.doc', '.docx', '.pdf', '.txt']:
-            if 'Documents' not in folder_suffix:
-                folder_suffix.append('Documents')
-        elif ext in ['.mp4', '.avi', '.mkv']:
-            if 'Videos' not in folder_suffix:
-                folder_suffix.append('Videos')
-        elif ext in ['.mp3', '.wav', '.flac']:
-            if 'Audio' not in folder_suffix:
-                folder_suffix.append('Audio')
-        elif ext in ['.zip', '.rar', '.tar.gz']:
-            if 'Archives' not in folder_suffix:
-                folder_suffix.append('Archives')
-        else:
-            if 'Others' not in folder_suffix:
-                folder_suffix.append('Others')
-        return folder_suffix
+    if file.suffix:
+        return file.suffix[1:].lower()
+
+    return "no_extension"
+
+def get_category(extension):
+
+    categories = {
+        "images": ["jpg", "jpeg", "png", "gif", "bmp", "tiff"],
+        "documents": ["pdf", "docx", "txt", "xlsx", "pptx"],
+        "videos": ["mp4", "avi", "mkv", "mov"],
+        "audio": ["mp3", "wav", "aac"],
+        "archives": ["zip", "rar", "tar", "gz"]
+    }
+
+    for category, extensions in categories.items():
+
+        if extension in extensions:
+            return category
+
+    return "others"
 
 
 
