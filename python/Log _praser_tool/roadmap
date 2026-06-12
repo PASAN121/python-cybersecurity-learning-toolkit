@@ -1,0 +1,17 @@
+log-parser-tool/
+│
+├── log_parser.py
+│
+├── auth.log
+│
+├── outputs/
+│   ├── parsed_logs.json
+│   └── summary.json
+│
+├── utils/
+│   ├── parser.py        # regex + parsing logic (optional refactor)
+│   ├── validator.py     # file validation (optional refactor)
+│
+├── README.md
+├── requirements.txt
+└── .gitignore

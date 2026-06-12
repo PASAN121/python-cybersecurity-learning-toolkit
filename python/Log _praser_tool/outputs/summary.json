@@ -1,0 +1,48 @@
+{
+    "total_attempts": 27,
+    "failed_attempts": 12,
+    "accepted_attempts": 15,
+    "failed_percentage": 44.44,
+    "unique_ips": 4,
+    "unique_usernames": 6,
+    "top_5_attacker_ips": [
+        [
+            "192.168.1.105",
+            4
+        ],
+        [
+            "198.51.100.99",
+            3
+        ],
+        [
+            "10.0.0.42",
+            3
+        ],
+        [
+            "203.0.113.77",
+            2
+        ]
+    ],
+    "top_5_targeted_users": [
+        [
+            "deploy",
+            3
+        ],
+        [
+            "alice",
+            3
+        ],
+        [
+            "root",
+            2
+        ],
+        [
+            "guest",
+            2
+        ],
+        [
+            "ftpuser",
+            2
+        ]
+    ]
+}

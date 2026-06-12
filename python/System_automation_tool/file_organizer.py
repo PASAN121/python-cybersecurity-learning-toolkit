@@ -4,6 +4,7 @@ from datetime import datetime
 import argparse
 import shutil #for moving files
 
+
 def validate_folder(folder):
     '''this function checks if the folder exists and is a directory'''
     
@@ -80,6 +81,7 @@ def create_category_folder(validated_folder, category):
 
 
 def move_file_to_category(file, category_folder):
+     
     destination=category_folder/file.name
 
     try:

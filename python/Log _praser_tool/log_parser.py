@@ -58,9 +58,38 @@ def save_to_json(parsed_data,output_file):
     
     
     
-def generate_summary():
-    pass     
+def generate_summary(parsed_data):
+    '''Generate attack/failed summary'''
     
+    from collections import Counter
+    
+    if not parsed_data:
+        return None
+    
+    total=len(parsed_data)
+    failed=sum(1 for entry in parsed_data if entry['status']=='Failed')
+    accepted= total - failed
+    
+    ip_counts = Counter(entry['ip_address'] for entry in parsed_data if entry['status'] == 'Failed')
+    user_counts = Counter(entry['username'] for entry in parsed_data if entry['status'] == 'Failed')
+
+    summary = {
+        "total_attempts": total,
+        "failed_attempts": failed,
+        "accepted_attempts": accepted,
+        "failed_percentage": round((failed / total) * 100, 2) if total else 0,
+        "unique_ips": len(set(entry['ip_address'] for entry in parsed_data)),
+        "unique_usernames": len(set(entry['username'] for entry in parsed_data)),
+        "top_5_attacker_ips": ip_counts.most_common(5),
+        "top_5_targeted_users": user_counts.most_common(5)
+    }
+
+    return summary
+    
+    
+     
+    
+        
 def main():
     log_file_path = input("Enter the path to the log file: ")
     validated_file = validate_file(log_file_path)
@@ -104,7 +133,11 @@ def main():
     save_to_json(parsed_log, output_file)
      
     
-
+    summary = generate_summary(parsed_log)
+    summary_file = output_folder / "summary.json"
+    with open(summary_file, 'w') as f:
+        json.dump(summary, f, indent=4)
+    print(f"Summary saved to {summary_file.resolve()}")
  
             
                    
