@@ -1,0 +1,13 @@
+log_parser/
+│
+├── read_log_file()
+│
+├── extract_log_data()
+│
+├── parse_log_entry()
+│
+├── save_to_json()
+│
+├── generate_summary()
+│
+└── main()
