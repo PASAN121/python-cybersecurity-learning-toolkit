@@ -94,15 +94,24 @@ def main():
     print(f"Port Range: {args.start_port} - {args.end_port}")
     print("-" * 40)
         
-    valid_ip = args.target_ip
-    valid_sp = args.start_port
-    valid_ep =  args.end_port
+ 
     
-    
-    # Port scanning loop       
-    for port in range(valid_sp,valid_ep+1):
-        if scan(valid_ip,port):
-            print(f"From {valid_ip} port {port} is open")
+    #proper result with collector
+    open_ports = []
+
+    for port in range(args.start_port, args.end_port + 1):
+        if scan(args.target_ip, port):
+            open_ports.append(port)
+
+    # 🔥 STEP 3 CHANGE: output moved OUT of loop
+    print("\nScan Complete")
+    print("Open Ports:")
+
+    if open_ports:
+        for port in open_ports:
+            print(f"- {port}")
+    else:
+        print("No open ports found")
     
     
             
