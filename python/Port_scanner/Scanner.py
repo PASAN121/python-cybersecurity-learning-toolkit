@@ -103,7 +103,7 @@ def main():
         if scan(args.target_ip, port):
             open_ports.append(port)
 
-    # 🔥 STEP 3 CHANGE: output moved OUT of loop
+    #output moved OUT of loop
     print("\nScan Complete")
     print("Open Ports:")
 

@@ -1,0 +1,40 @@
+User
+ │
+ ▼
+CLI Arguments
+(target IP, start port, end port)
+
+ │
+ ▼
+Input Validation
+
+ │
+ ▼
+Thread Manager
+(ThreadPool)
+
+ │
+ ▼
+Port Scanner Worker
+(connect to port)
+
+ ├── Closed Port
+ │      └─ Ignore / Record
+ │
+ └── Open Port
+        │
+        ▼
+   Banner Grabber
+   (receive service data)
+
+        │
+        ▼
+   Result Collector
+
+        │
+        ▼
+ JSON Report Generator
+
+        │
+        ▼
+ scan_report.json
