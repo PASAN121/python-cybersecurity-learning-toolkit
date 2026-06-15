@@ -1,9 +1,10 @@
 import json
 import socket
 import argparse
-import threading
+#import threading
 from datetime import datetime
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 def ip_sp_ep_validator(ip,sp,ep):
@@ -94,16 +95,17 @@ def grab_banner(ip,port):
    
                
 #threading  worker
-def scan_worker(ip,port,open_port):
-    if scan(ip,port):
-        banner=grab_banner(ip,port)
-        
-         
-        open_port.append({
-                "port":port,
-                "status":"Open",
-                "banner":banner     
-            })
+def scan_worker(ip, port):
+    if scan(ip, port):
+        banner = grab_banner(ip, port)
+
+        return {
+            "port": port,
+            "status": "Open",
+            "banner": banner
+        }
+
+    return None
         
 def save_latest(data):
     file_name = "reports/latest_scan.json"
@@ -120,7 +122,32 @@ def save_history(data):
 
     with open(file_name, "w") as f:
         json.dump(data, f, indent=2)
+        
+        
+def run_scan(ip, start_port, end_port):
+    results = []
+    total = end_port - start_port + 1
+    completed = 0
 
+    print(f"\nScanning {total} ports...\n")
+
+    with ThreadPoolExecutor(max_workers=100) as executor:
+
+        futures = {
+            executor.submit(scan_worker, ip, port): port
+            for port in range(start_port, end_port + 1)
+        }
+
+        for future in as_completed(futures):
+            completed += 1
+            print(f"\rProgress: {completed}/{total}", end="")
+
+            result = future.result()
+            if result:
+                results.append(result)
+
+    print("\nScan completed.\n")
+    return results
 
 def main():
     """
@@ -147,10 +174,11 @@ def main():
     print("-" * 40)
         
  
-    
+    '''
     #proper result with collector
+    
     threads=[]
-    open_ports = []
+    
 
     for port in range(args.start_port, args.end_port + 1):
         t=threading.Thread(target=scan_worker,args=(args.target_ip,port,open_ports))
@@ -161,17 +189,24 @@ def main():
     
     for t in threads:
         t.join()
+    '''
+    
+    results = run_scan(
+        args.target_ip,
+        args.start_port,
+        args.end_port
+    )
 
     #output moved OUT of loop
     print("\nOpen Ports + Services:\n")
 
-    for r in sorted(open_ports, key=lambda x: x["port"]):
+    for r in sorted(results, key=lambda x: x["port"]):
         print(f"Port {r['port']} is {r['status']}")
         print(f"    Banner: {r['banner']}\n")
         
    
-    save_latest(open_ports)
-    save_history(open_ports)
+    save_latest(results)
+    save_history(results)
 
     
             
