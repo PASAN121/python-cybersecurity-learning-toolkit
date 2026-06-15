@@ -1,6 +1,9 @@
 import json
 import socket
 import argparse
+import threading
+from datetime import datetime
+import os
 
 
 def ip_sp_ep_validator(ip,sp,ep):
@@ -66,8 +69,57 @@ def scan(ip,port):
     
     finally:
         s.close()
-        
+ 
+def grab_banner(ip,port):
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(2)
 
+        s.connect((ip, port))   
+        
+        banner=s.recv(1024).decode(errors="ignore").strip()
+        
+        s.close()
+        
+        if banner:
+            return banner
+        else:
+            return "No banner received"
+
+    except:
+        return "No banner / filtered / timeout"         
+        
+        
+        
+   
+               
+#threading  worker
+def scan_worker(ip,port,open_port):
+    if scan(ip,port):
+        banner=grab_banner(ip,port)
+        
+         
+        open_port.append({
+                "port":port,
+                "status":"Open",
+                "banner":banner     
+            })
+        
+def save_latest(data):
+    file_name = "reports/latest_scan.json"
+
+    with open(file_name, "w") as f:
+        json.dump(data, f, indent=2)
+
+
+def save_history(data):
+    os.makedirs("reports/history", exist_ok=True)
+
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    file_name = f"reports/history/scan_{timestamp}.json"
+
+    with open(file_name, "w") as f:
+        json.dump(data, f, indent=2)
 
 
 def main():
@@ -97,22 +149,30 @@ def main():
  
     
     #proper result with collector
+    threads=[]
     open_ports = []
 
     for port in range(args.start_port, args.end_port + 1):
-        if scan(args.target_ip, port):
-            open_ports.append(port)
+        t=threading.Thread(target=scan_worker,args=(args.target_ip,port,open_ports))
+        threads.append(t)
+        t.start()
+        
+    #wait for all threads to finish
+    
+    for t in threads:
+        t.join()
 
     #output moved OUT of loop
-    print("\nScan Complete")
-    print("Open Ports:")
+    print("\nOpen Ports + Services:\n")
 
-    if open_ports:
-        for port in open_ports:
-            print(f"- {port}")
-    else:
-        print("No open ports found")
-    
+    for r in sorted(open_ports, key=lambda x: x["port"]):
+        print(f"Port {r['port']} is {r['status']}")
+        print(f"    Banner: {r['banner']}\n")
+        
+   
+    save_latest(open_ports)
+    save_history(open_ports)
+
     
             
         
