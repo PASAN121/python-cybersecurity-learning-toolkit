@@ -13,7 +13,8 @@ This tool is designed for **network administrators, penetration testers, and cyb
 - ✅ **CLI-based input** — specify target IP and port range directly from the terminal
 - ✅ **Input validation** — verifies IPv4 address format and ensures a valid port range
 - ✅ **TCP Connect Scan** — uses `socket.connect_ex()` for reliable full-handshake detection
-- ✅ **Multithreaded scanning** — scans multiple ports concurrently for significant speed gains
+- ✅ **Concurrent scanning with ThreadPoolExecutor** — efficiently manages a pool of up to 100 worker threads for fast, scalable scanning
+- ✅ **Live progress tracking** — displays real-time scan progress (`completed/total`) in the terminal
 - ✅ **Banner grabbing** — attempts to read service banners from open ports for fingerprinting
 - ✅ **Structured results** — collects scan data as a list of dictionaries (`port`, `status`, `banner`)
 - ✅ **JSON reporting** — generates machine-readable output for integration with other tools
@@ -27,13 +28,13 @@ This tool is designed for **network administrators, penetration testers, and cyb
    The provided IP address is checked for valid IPv4 formatting (four octets, each 0–255), and the port range is validated to ensure the start port does not exceed the end port.
 
 2. **Concurrent Port Scanning**
-   For each port in the specified range, a separate thread is spawned. Each thread attempts a TCP connection using `socket.connect_ex()`. A return value of `0` indicates the port is **open**.
+   For each port in the specified range, a task is submitted to a `ThreadPoolExecutor` (up to 100 concurrent workers). Each task attempts a TCP connection using `socket.connect_ex()`. A return value of `0` indicates the port is **open**. As each task completes, a live progress counter (`completed/total`) is printed to the terminal.
 
 3. **Banner Grabbing**
    For every open port, the scanner attempts a secondary connection and reads up to 1024 bytes from the socket, capturing any service banner (e.g., SSH version strings, HTTP headers) within a 2-second timeout.
 
 4. **Result Aggregation**
-   All open ports, along with their status and banners, are appended to a shared list, which is sorted numerically once all threads complete.
+   Results from completed tasks are filtered (only open ports return data) and collected into a list, which is sorted numerically once all tasks complete.
 
 5. **Reporting**
    - The latest scan results overwrite `reports/latest_scan.json`
@@ -95,6 +96,11 @@ Target IP: 192.168.1.10
 Port Range: 20 - 100
 ----------------------------------------
 
+Scanning 81 ports...
+
+Progress: 81/81
+Scan completed.
+
 Open Ports + Services:
 
 Port 22 is Open
@@ -143,8 +149,8 @@ reports/history/scan_2026-06-16_14-32-05.json
 | Technology | Purpose |
 |------------|---------|
 | **Python 3** | Core programming language |
+| `concurrent.futures` (ThreadPoolExecutor) | Managed thread pool for concurrent, scalable scanning |
 | `socket` | Low-level TCP connection handling and banner grabbing |
-| `threading` | Concurrent execution for faster scanning |
 | `argparse` | Command-line argument parsing |
 | `json` | Structured report generation |
 | `datetime` / `os` | Timestamped history file management |
@@ -163,7 +169,7 @@ This project demonstrates practical knowledge of both **networking/cybersecurity
 
 ### 🐍 Python Concepts
 - Socket programming (`AF_INET`, `SOCK_STREAM`, `connect_ex`, timeouts)
-- Multithreading for I/O-bound concurrent tasks
+- Concurrent programming with `ThreadPoolExecutor` and `as_completed` for I/O-bound tasks
 - Robust input validation and error handling
 - CLI tool design with `argparse`
 - Structured data handling and JSON serialization
