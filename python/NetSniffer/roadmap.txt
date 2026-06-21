@@ -1,0 +1,89 @@
+User
+ │
+ ▼
+CLI Arguments (argparse)
+ ├── mode (live / pcap)
+ ├── iface (live only)
+ ├── file (pcap only)
+ ├── filter (tcp / udp / all)
+ └── log file
+
+ │
+ ▼
+Input Validation Layer
+ ├── check mode requirements
+ ├── validate iface or file
+ └── warn invalid combinations
+
+ │
+ ▼
+Router (main controller)
+ ├── if live → live_sniff()
+ └── if pcap → pcap_analyze()
+
+────────────────────────────────────
+
+LIVE MODE PIPELINE
+────────────────────────────────────
+
+live_sniff()
+ │
+ ▼
+Scapy Sniffer Engine (sniff())
+ │
+ ▼
+Packet Callback Function
+ (called per packet)
+ │
+ ▼
+Packet Parser Layer
+ ├── extract IP src/dst
+ ├── detect TCP/UDP
+ └── extract ports
+
+ │
+ ▼
+Traffic Logger
+ ├── write to log file
+ └── store structured event
+
+ │
+ ▼
+Traffic Tracker (in-memory)
+ ├── {src_ip: [timestamps]}
+ └── {src_ip: [destination ports]}
+
+ │
+ ▼
+Port Scan Detection Engine
+ ├── if unique ports > 10
+ ├── within 30 seconds
+ └── FLAG as suspicious
+
+ │
+ ▼
+Alert Generator
+ ├── print warning
+ └── log attack event
+
+────────────────────────────────────
+
+PCAP MODE PIPELINE
+────────────────────────────────────
+
+pcap_analyze()
+ │
+ ▼
+Read PCAP file (scapy.rdpcap)
+ │
+ ▼
+Loop packets
+ │
+ ▼
+Same Packet Parser Layer
+ │
+ ▼
+Same Logger + Detector
+ │
+ ▼
+Final Summary Report
