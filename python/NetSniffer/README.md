@@ -294,18 +294,6 @@ python-cybersecurity-learning-toolkit/
 ```
 
 ---
-
-## 🔗 Related Modules
-
-| Module | Tool |
-|---|---|
-| Module 01 | File Integrity Monitor (SHA-256 hashing) |
-| Module 02 | SSH Log Parser (regex + structured output) |
-| Module 03 | Cyber Process Monitor (psutil, Windows Task Manager clone) |
-| Module 06 | **Network Sniffer & Traffic Analyser** ← you are here |
-
----
-
 ## 📚 Key Concepts Checklist
 
 - [x] `argparse` — CLI design with flags, choices, and defaults
