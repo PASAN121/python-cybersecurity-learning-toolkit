@@ -1,6 +1,7 @@
 # main.py
 import argparse
 import sys
+from analyzer import analyze_log
 
 def main():
     parser = argparse.ArgumentParser(
@@ -34,6 +35,7 @@ def main():
         print(f"[ERROR] Permission denied: {args.log_file}")
         sys.exit(1)
 
+    analyze_log(log_data, threshold=args.threshold)
 
 if __name__ == "__main__":
     main() # only runs when executed directly, not when imported
