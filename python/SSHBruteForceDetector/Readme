@@ -1,0 +1,115 @@
+# Module 7: SSH Brute Force Detector
+
+A Python tool that parses SSH auth logs, detects brute force attempts, and flags compromised IPs that gained successful access after repeated failures.
+
+Built as part of my [Python Cybersecurity Learning Toolkit](https://github.com/PASAN121/python-cybersecurity-learning-toolkit).
+
+---
+
+## What It Does
+
+- Parses `/var/log/auth.log` for SSH login events
+- Counts failed login attempts per IP using `defaultdict`
+- Flags IPs exceeding a configurable failure threshold (default: 5)
+- Detects **compromise indicators** — IPs that failed repeatedly then logged in successfully
+- Outputs a human-readable console report + structured JSON file
+
+---
+
+## Project Structure
+
+```
+SSHBruteForceDetector/
+├── main.py        # CLI entry point, argument parsing, file validation
+├── analyzer.py    # Regex parsing, failure counting, IP flagging
+├── report.py      # Threat report formatting, JSON output
+└── outputs/
+    └── ssh_threat_report.json
+```
+
+---
+
+## Usage
+
+```bash
+python main.py <log_file> [--threshold N]
+```
+
+```bash
+# default threshold (5 failures)
+python main.py /var/log/auth.log
+
+# custom threshold
+python main.py /var/log/auth.log --threshold 10
+
+# test with sample log
+python main.py sample_auth.log
+```
+
+---
+
+## Sample Output
+
+**Console:**
+
+```
+============================================================
+       SSH BRUTE FORCE THREAT REPORT
+============================================================
+
+[COMPROMISED] 198.51.100.23
+  Failed attempts : 5
+  First seen      : Jun  2 11:45:17
+  Last seen       : Jun  6 01:22:05
+  Successful login: ['Jun  5 14:25:10', 'Jun  3 13:22:44']
+
+============================================================
+
+[+] JSON report saved to outputs/ssh_threat_report.json
+```
+
+**JSON (`outputs/ssh_threat_report.json`):**
+
+```json
+{
+    "generated_at": "2026-06-24 23:18:57",
+    "total_flagged_ips": 1,
+    "threats": [
+        {
+            "ip": "198.51.100.23",
+            "failed_attempts": 5,
+            "first_seen": "Jun  2 11:45:17",
+            "last_seen": "Jun  6 01:22:05",
+            "compromised": true,
+            "successful_logins": [
+                "Jun  5 14:25:10",
+                "Jun  3 13:22:44"
+            ]
+        }
+    ]
+}
+```
+
+---
+
+## Concepts Practiced
+
+| Concept | Used In |
+|---|---|
+| `argparse` CLI arguments | `main.py` |
+| Exception handling | `main.py` |
+| Regex with capture groups | `analyzer.py` |
+| `defaultdict(int/list)` | `analyzer.py` |
+| Dict comprehension | `analyzer.py` |
+| JSON output with `json.dump` | `report.py` |
+| Compromise detection logic | `report.py` |
+
+---
+
+## Security Relevance
+
+SSH brute force is one of the most common attack vectors against exposed servers. This tool replicates the core detection logic used in real SIEM systems and IDS tools like Fail2Ban — parse logs, count failures per source, alert on threshold breach, flag successful logins from attacking IPs as high-severity compromise indicators.
+
+---
+
+*Part of a self-directed cybersecurity learning bootcamp targeting CompTIA Security+ and a SOC Analyst career path.*
