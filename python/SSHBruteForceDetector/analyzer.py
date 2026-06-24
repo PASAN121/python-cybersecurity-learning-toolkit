@@ -1,5 +1,6 @@
 import re
 from collections import defaultdict # dict with auto-initialized default values
+from report import generate_report # output formatting lives in report.py
 
 def analyze_log(log_data, threshold=5):
     failed_attempts = defaultdict(int) # counts total failed attempts per IP
@@ -34,5 +35,6 @@ def analyze_log(log_data, threshold=5):
         for ip, count in failed_attempts.items()
         if count >= threshold  # threshold comes from main.py CLI arg
     }
-
+    # pass all data to report.py for formatting and saving
+    generate_report(flagged_ips, failed_details, successful_logins)
     

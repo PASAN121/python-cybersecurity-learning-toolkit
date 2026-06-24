@@ -1,0 +1,17 @@
+{
+    "generated_at": "2026-06-24 23:18:57",
+    "total_flagged_ips": 1,
+    "threats": [
+        {
+            "ip": "198.51.100.23",
+            "failed_attempts": 5,
+            "first_seen": "Jun  2 11:45:17",
+            "last_seen": "Jun  6 01:22:05",
+            "compromised": true,
+            "successful_logins": [
+                "Jun  5 14:25:10",
+                "Jun  3 13:22:44"
+            ]
+        }
+    ]
+}
